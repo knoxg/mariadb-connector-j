@@ -27,7 +27,7 @@ public final class QueryWithParametersPacket implements RedoableClientMessage {
   private final ClientParser parser;
   private final InputStream localInfileInputStream;
   private List<Parameters> parametersList;
-
+  
   /**
    * Constructor
    *
@@ -47,38 +47,45 @@ public final class QueryWithParametersPacket implements RedoableClientMessage {
     this.localInfileInputStream = localInfileInputStream;
   }
   
+  /**
+   * Constructor for a packet containing multiple sets of parameters
+   *
+   * @param preSqlCmd additional pre command
+   * @param parser command parser result
+   * @param parametersList list of parameters
+   */
   public QueryWithParametersPacket(
       String preSqlCmd,
       ClientParser parser,
-      List<Parameters> parametersList,
-      InputStream localInfileInputStream) {
+      List<Parameters> parametersList) {
     this.preSqlCmd = preSqlCmd;
     this.parser = parser;
     this.parametersList = parametersList;
-    this.localInfileInputStream = localInfileInputStream;
+    this.localInfileInputStream = null;
   }
 
   @Override
   public void ensureReplayable(Context context) throws IOException, SQLException {
-	for (int j = 0; j < parametersList.size(); j++) {
-	  Parameters parameters = parametersList.get(j);
+    for (int j = 0; j < parametersList.size(); j++) {
+      Parameters parameters = parametersList.get(j);
       int parameterCount = parameters.size();
       for (int i = 0; i < parameterCount; i++) {
         Parameter p = parameters.get(i);
         if (!p.isNull() && p.canEncodeLongData()) {
           parameters.set(
-            i, new org.mariadb.jdbc.codec.Parameter<>(ByteArrayCodec.INSTANCE, p.encodeData()));
+              i, new org.mariadb.jdbc.codec.Parameter<>(ByteArrayCodec.INSTANCE, p.encodeData()));
         }
       }
-	}
+    }
   }
 
+  @Override
   public void saveParameters() {
-	List<Parameters> clonedParameterList = new ArrayList<Parameters>(parametersList.size());
+    List<Parameters> clonedParameterList = new ArrayList<Parameters>(parametersList.size());
 	for (int j = 0; j < parametersList.size(); j++) {
-		clonedParameterList.add(parametersList.get(j).clone());
+	  clonedParameterList.add(parametersList.get(j).clone());
 	}
-    this.parametersList = clonedParameterList;
+	this.parametersList = clonedParameterList;
   }
 
   @Override
@@ -88,6 +95,7 @@ public final class QueryWithParametersPacket implements RedoableClientMessage {
     if (preSqlCmd != null) encoder.writeAscii(preSqlCmd);
     if (parser.getParamPositions().size() == 0) {
       encoder.writeBytes(parser.getQuery());
+      
     } else if (parser.getValuesBracketPositions() == null || parametersList.size() == 1) {
       Parameters parameters = parametersList.get(0);
       int pos = 0;
@@ -99,59 +107,48 @@ public final class QueryWithParametersPacket implements RedoableClientMessage {
         parameters.get(i).encodeText(encoder, context);
       }
       encoder.writeBytes(parser.getQuery(), pos, parser.getQuery().length - pos);
+      
     } else {
       // do the rewriting here
       int startValuePos = parser.getValuesBracketPositions().get(0);
       int endValuePos = parser.getValuesBracketPositions().get(1);
       int parameterListIdx = 0;
-      
+
+      // all parameters must be inside the values block.
       Parameters parameters = parametersList.get(parameterListIdx);
-      int startIdx = 0;
-      int returnIdx; // maybe calc outside the loop
-      for (int i = startIdx; i < parser.getParamPositions().size(); i++) {
-    	  if (parser.getParamPositions().get(i) >= startValuePos) {
-    		  returnIdx = i; break;
-    	  }
-      }
-      
-      int pos = 0; // byte position
-      int paramPos; // placeholder position
+      int pos = 0;  // current byte position within parser.getQuery()
+      int paramPos; // next placeholder byte position
       for (int j = 0; j < parametersList.size(); j++) {
-        for (int i = startIdx; i < parser.getParamPositions().size(); i++) {
+        for (int i = 0; i < parser.getParamPositions().size(); i++) {
           paramPos = parser.getParamPositions().get(i);
-          if (paramPos < startValuePos) {
-	          encoder.writeBytes(parser.getQuery(), pos, paramPos - pos);
-	          pos = paramPos + 1;
-	          parameters.get(i).encodeText(encoder, context);
-          } else if (paramPos < endValuePos) {
-        	  encoder.writeBytes(parser.getQuery(), pos, paramPos - pos);
-	          pos = paramPos + 1;
-	          parameters.get(i).encodeText(encoder, context);
-          }
+          encoder.writeBytes(parser.getQuery(), pos, paramPos - pos);
+          pos = paramPos + 1;
+          parameters.get(i).encodeText(encoder, context);
         }
         if (j < parametersList.size() - 1) {
-        	encoder.writeBytes(parser.getQuery(), pos, endValuePos - pos);
-        	// there should be a comma here but the old code didn't have one. oh yes it did.
-        	
-        	
+          encoder.writeBytes(parser.getQuery(), pos, endValuePos - pos);
+          encoder.writeByte(',');
+          pos = startValuePos;
         }
       }
       encoder.writeBytes(parser.getQuery(), pos, parser.getQuery().length - pos);
-    	
-    	
     }
+    
     encoder.flush();
     return 1;
   }
-
+  
+  @Override
   public int batchUpdateLength() {
     return 1;
   }
 
+  @Override
   public boolean validateLocalFileName(String fileName, Context context) {
-    return ClientMessage.validateLocalFileName(parser.getSql(), parameters, fileName, context);
+    return ClientMessage.validateLocalFileName(parser.getSql(), parametersList.get(0), fileName, context);
   }
 
+  @Override
   public InputStream getLocalInfileInputStream() {
     return localInfileInputStream;
   }
@@ -160,4 +157,5 @@ public final class QueryWithParametersPacket implements RedoableClientMessage {
   public String description() {
     return parser.getSql();
   }
+
 }
