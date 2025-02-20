@@ -213,8 +213,8 @@ public class ClientPreparedStatement extends BasePreparedStatement {
   
   public static ClientMessage[] getBatchPackets(String preSqlCmd, ClientParser parser, List<Parameters> parametersList, Context context) throws SQLException {
 	  List<ClientMessage> messages = new ArrayList<>();
-      int startValuePos = parser.getValuesBracketPositions().get(0);
-      int endValuePos = parser.getValuesBracketPositions().get(1);
+	  int startValuePos = parser.getValuesBracketPositions().get(0);
+	  int endValuePos = parser.getValuesBracketPositions().get(1);
 	  
 	  int staticLength = startValuePos + (parser.getQuery().length - endValuePos); // non-repeating sections
 	  int repeatLength = (endValuePos - startValuePos - parser.getParamPositions().size()); // repeating section, excluding parameters
@@ -256,7 +256,7 @@ public class ClientPreparedStatement extends BasePreparedStatement {
 			  packetLength += 1; // the comma between VALUES() blocks
 		  }
 		  currentIndex++;
-      } while (currentIndex < totalParameterList);
+	  } while (currentIndex < totalParameterList);
 	  if (startIndex != currentIndex) {
 		  messages.add(new QueryWithParametersPacket(preSqlCmd, parser, parametersList.subList(startIndex, currentIndex)));
 	  }

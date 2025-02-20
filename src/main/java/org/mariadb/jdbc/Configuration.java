@@ -340,7 +340,7 @@ public class Configuration {
     this.prepStmtCacheSize = builder.prepStmtCacheSize != null ? builder.prepStmtCacheSize : 250;
     this.useAffectedRows = builder.useAffectedRows != null && builder.useAffectedRows;
     this.rewriteBatchedStatements = builder.rewriteBatchedStatements != null && builder.rewriteBatchedStatements;
-    // disable use server prepare id using client rewrite
+    // disable use server prepare if using client rewrite
     if (this.rewriteBatchedStatements) {
         this.useServerPrepStmts = false;
     } else {
@@ -2883,7 +2883,7 @@ public class Configuration {
      * rewritten "insert into ab (i) values (1), (2)".
      *
      * <p>If query cannot be rewriten in "multi-values", rewrite will use multi-queries : "INSERT
-     * INTO TABLE(col1) VALUES (?) ON DUPLICATE KEY UPDATE col2=?" with values [1,2] and [2,3] will
+     * INTO TABLE(col1) VALUES (?) ON DUPLICATE KEY UPDATE col2=?" with values [1,2] and [3,4] will
      * be rewritten "INSERT INTO TABLE(col1) VALUES (1) ON DUPLICATE KEY UPDATE col2=2;INSERT INTO
      * TABLE(col1) VALUES (3) ON DUPLICATE KEY UPDATE col2=4"
      *

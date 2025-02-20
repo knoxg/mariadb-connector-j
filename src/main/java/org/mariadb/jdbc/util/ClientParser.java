@@ -69,7 +69,7 @@ public final class ClientParser implements PrepareResult {
     int multiQueryIdx = -1;
     byte[] query = queryString.getBytes(StandardCharsets.UTF_8);
     int queryLength = query.length;
-    for (int i = 0; i < queryLength; i++) { // @TODO: this should be iterating over characters, not bytes
+    for (int i = 0; i < queryLength; i++) {
 
       byte car = query[i];
       if (state == LexState.Escape
@@ -252,7 +252,7 @@ public final class ClientParser implements PrepareResult {
     int multiQueryIdx = -1;
     byte[] query = queryString.getBytes(StandardCharsets.UTF_8);
     int queryLength = query.length;
-    for (int i = 0; i < queryLength; i++) { // @TODO: this should be iterating over characters, not bytes
+    for (int i = 0; i < queryLength; i++) {
 
       byte car = query[i];
       if (state == LexState.Escape
