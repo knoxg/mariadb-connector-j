@@ -400,8 +400,8 @@ public final class ClientParser implements PrepareResult {
               && (query[i + 4] == 'e' || query[i + 4] == 'E')
               && (query[i + 5] == 's' || query[i + 5] == 'S')
               && (query[i + 6] == '(' || ((byte) query[i + 6] <= 40))) { 
-            i = i + 5;
-            valuesBracketPositions.add(i);
+        	valuesBracketPositions.add(i + 6);
+        	i = i + 5;
           }
           break;
         case 'l':

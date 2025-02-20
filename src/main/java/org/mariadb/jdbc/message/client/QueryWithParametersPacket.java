@@ -112,13 +112,12 @@ public final class QueryWithParametersPacket implements RedoableClientMessage {
       // do the rewriting here
       int startValuePos = parser.getValuesBracketPositions().get(0);
       int endValuePos = parser.getValuesBracketPositions().get(1);
-      int parameterListIdx = 0;
 
       // all parameters must be inside the values block.
-      Parameters parameters = parametersList.get(parameterListIdx);
       int pos = 0;  // current byte position within parser.getQuery()
       int paramPos; // next placeholder byte position
       for (int j = 0; j < parametersList.size(); j++) {
+    	Parameters parameters = parametersList.get(j);
         for (int i = 0; i < parser.getParamPositions().size(); i++) {
           paramPos = parser.getParamPositions().get(i);
           encoder.writeBytes(parser.getQuery(), pos, paramPos - pos);
@@ -126,7 +125,7 @@ public final class QueryWithParametersPacket implements RedoableClientMessage {
           parameters.get(i).encodeText(encoder, context);
         }
         if (j < parametersList.size() - 1) {
-          encoder.writeBytes(parser.getQuery(), pos, endValuePos - pos);
+          encoder.writeBytes(parser.getQuery(), pos, endValuePos - pos + 1);
           encoder.writeByte(',');
           pos = startValuePos;
         }
