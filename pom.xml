@@ -5,7 +5,7 @@
     <artifactId>mariadb-java-client</artifactId>
     <packaging>jar</packaging>
     <name>mariadb-java-client</name>
-    <version>3.5.2-1</version>
+    <version>3.5.2-1-SNAPSHOT</version>
     <description>JDBC driver for MariaDB and MySQL</description>
     <url>https://mariadb.com/kb/en/mariadb/about-mariadb-connector-j/</url>
 
@@ -48,11 +48,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/mariadb-corporation/mariadb-connector-j.git</connection>
-        <url>https://github.com/mariadb-corporation/mariadb-connector-j</url>
-        <developerConnection>scm:git:git@github.com:MariaDB/mariadb-connector-j.git
-        </developerConnection>
-      <tag>mariadb-java-client-3.5.2-1</tag>
+        <connection>scm:git:http://gitlab.dev.randomnoun/thirdparty/mariadb-connector-j.git</connecti>
+        <developerConnection>scm:git:http://gitlab.dev.randomnoun/thirdparty/mariadb-connector-j.git</developerConnection>
+        <url>http://gitlab.dev.randomnoun/thirdparty/mariadb-connector-j</url>
   </scm>
 
     <issueManagement>
@@ -61,9 +59,16 @@
     </issueManagement>
 
     <distributionManagement>
+         <repository>
+            <id>releases</id>
+            <name>randomnoun releases</name>
+            <url>http://nexus2.dev.randomnoun/nexus/content/repositories/releases/</url>
+        </repository>
         <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>snapshots</id>
+            <name>randomnoun snapshots</name>
+            <url>http://nexus2.dev.randomnoun/nexus/content/repositories/snapshots/</url>
+            <uniqueVersion>false</uniqueVersion>
         </snapshotRepository>
     </distributionManagement>
 
