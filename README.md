@@ -1,3 +1,12 @@
+# randomnoun fork of MariaDB java connector
+
+This repository is a fork of the [main mariadb connector repository here](https://github.com/mariadb-corporation/mariadb-connector-j)
+
+It reimplements the `rewriteBatchedStatements` connector property, that was removed in version 3.0.x of the connector.
+
+* [CONJ-1238 issue link](https://jira.mariadb.org/browse/CONJ-1238)
+* [PR request](https://github.com/mariadb-corporation/mariadb-connector-j/pull/202)
+
 <p style="text-align: center;">
 	<a href="https://mariadb.com/">
 		<img alt="mariadb logo" src="https://mariadb.com/kb/static/images/logo-2018-black.png">
