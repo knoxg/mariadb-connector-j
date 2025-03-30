@@ -48,7 +48,7 @@
     </developers>
 
     <scm>
-        <connection>scm:git:http://gitlab.dev.randomnoun/thirdparty/mariadb-connector-j.git</connecti>
+        <connection>scm:git:http://gitlab.dev.randomnoun/thirdparty/mariadb-connector-j.git</connection>
         <developerConnection>scm:git:http://gitlab.dev.randomnoun/thirdparty/mariadb-connector-j.git</developerConnection>
         <url>http://gitlab.dev.randomnoun/thirdparty/mariadb-connector-j</url>
   </scm>
