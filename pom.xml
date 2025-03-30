@@ -5,7 +5,7 @@
     <artifactId>mariadb-java-client</artifactId>
     <packaging>jar</packaging>
     <name>mariadb-java-client</name>
-    <version>3.5.2-3</version>
+    <version>3.5.2-4-SNAPSHOT</version>
     <description>JDBC driver for MariaDB and MySQL</description>
     <url>https://mariadb.com/kb/en/mariadb/about-mariadb-connector-j/</url>
 
@@ -51,7 +51,7 @@
         <connection>scm:git:http://gitlab.dev.randomnoun/thirdparty/mariadb-connector-j.git</connection>
         <developerConnection>scm:git:http://gitlab.dev.randomnoun/thirdparty/mariadb-connector-j.git</developerConnection>
         <url>http://gitlab.dev.randomnoun/thirdparty/mariadb-connector-j</url>
-    <tag>mariadb-java-client-3.5.2-3</tag>
+    <tag>mariadb-java-client-3.5.2-2</tag>
   </scm>
 
     <issueManagement>
