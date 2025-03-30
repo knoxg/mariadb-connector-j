@@ -51,7 +51,7 @@
         <connection>scm:git:http://gitlab.dev.randomnoun/thirdparty/mariadb-connector-j.git</connection>
         <developerConnection>scm:git:http://gitlab.dev.randomnoun/thirdparty/mariadb-connector-j.git</developerConnection>
         <url>http://gitlab.dev.randomnoun/thirdparty/mariadb-connector-j</url>
-    <tag>HEAD</tag>
+    <tag>mariadb-java-client-3.5.2-2</tag>
   </scm>
 
     <issueManagement>
